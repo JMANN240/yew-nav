@@ -9,6 +9,8 @@ pub fn use_is_active_route<R: Routable + 'static>(to: &R) -> bool {
 #[derive(Properties, PartialEq)]
 pub struct NavLinkProps<R: PartialEq> {
     pub to: R,
+
+    #[prop_or_default]
     pub classes: Classes,
 
     #[prop_or_default]
@@ -45,9 +47,10 @@ pub fn NavLink<R: Routable + 'static>(
 
 #[derive(Properties, PartialEq)]
 pub struct NavBarProps {
+    #[prop_or_default]
     pub classes: Classes,
 
-    #[prop_or(classes!("flex", "items-center", "gap-4"))]
+    #[prop_or_default]
     pub container_classes: Classes,
 
     #[prop_or_default]
@@ -72,13 +75,13 @@ pub fn NavBar(
 ) -> Html {
     html! {
         <nav class={classes!("flex", "justify-between", "items-center", classes.clone())}>
-            <div class={container_classes.clone()}>
+            <div class={classes!("flex", "items-center", "gap-4", container_classes.clone())}>
                 { left_nav_links.clone() }
             </div>
-            <div class={container_classes.clone()}>
+            <div class={classes!("flex", "items-center", "gap-4", container_classes.clone())}>
                 { center_nav_links.clone() }
             </div>
-            <div class={container_classes.clone()}>
+            <div class={classes!("flex", "items-center", "gap-4", container_classes.clone())}>
                 { right_nav_links.clone() }
             </div>
         </nav>
