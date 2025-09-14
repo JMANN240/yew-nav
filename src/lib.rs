@@ -84,3 +84,46 @@ pub fn NavBar(
         </nav>
     }
 }
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct NavState {
+	pub shown: bool
+}
+
+pub enum NavStateAction {
+    Open,
+    Close,
+    Toggle,
+}
+
+impl Reducible for NavState {
+    type Action = NavStateAction;
+
+    fn reduce(self: std::rc::Rc<Self>, action: Self::Action) -> std::rc::Rc<Self> {
+        match action {
+            NavStateAction::Open => NavState { shown: true },
+            NavStateAction::Close => NavState { shown: false },
+            NavStateAction::Toggle => NavState { shown: !self.shown },
+        }
+        .into()
+    }
+}
+
+pub type NavStateContext = UseReducerHandle<NavState>;
+
+#[derive(Properties, Debug, PartialEq)]
+pub struct NavStateProviderProps {
+    #[prop_or_default]
+    pub children: Html,
+}
+
+#[function_component]
+pub fn NavStateProvider(props: &NavStateProviderProps) -> Html {
+    let nav_state_reducer = use_reducer(|| NavState { shown: false });
+
+    html! {
+        <ContextProvider<NavStateContext> context={nav_state_reducer}>
+            {props.children.clone()}
+        </ContextProvider<NavStateContext>>
+    }
+}
