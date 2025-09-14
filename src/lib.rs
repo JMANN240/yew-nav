@@ -74,14 +74,14 @@ pub fn NavBar(
     }: &NavBarProps,
 ) -> Html {
     html! {
-        <nav class={classes!("flex", "justify-between", "items-center", classes.clone())}>
-            <div class={classes!("flex", "items-center", "gap-4", container_classes.clone())}>
+        <nav style="display: flex; justify-content: space-between; align-items: center;" class={classes!(classes.clone())}>
+            <div style="display: flex; align-items: center;" class={classes!(container_classes.clone())}>
                 { left_nav_links.clone() }
             </div>
-            <div class={classes!("flex", "items-center", "gap-4", container_classes.clone())}>
+            <div style="display: flex; align-items: center;" class={classes!(container_classes.clone())}>
                 { center_nav_links.clone() }
             </div>
-            <div class={classes!("flex", "items-center", "gap-4", container_classes.clone())}>
+            <div style="display: flex; align-items: center;" class={classes!(container_classes.clone())}>
                 { right_nav_links.clone() }
             </div>
         </nav>
