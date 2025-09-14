@@ -1,0 +1,8 @@
+[package]
+name = "yew-nav"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+yew = "0.21.0"
+yew-router = "0.18.0"
