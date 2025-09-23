@@ -63,6 +63,20 @@ pub struct NavBarProps {
     pub right_nav_links: Html,
 }
 
+#[macro_export]
+macro_rules! navbar_classes {
+    () => {
+        ::yew::classes!("flex", "justify-between", "items-center")
+    };
+}
+
+#[macro_export]
+macro_rules! navcontainer_classes {
+    () => {
+        ::yew::classes!("flex", "items-center", "gap-4")
+    };
+}
+
 #[function_component]
 pub fn NavBar(
     NavBarProps {
@@ -75,13 +89,13 @@ pub fn NavBar(
 ) -> Html {
     html! {
         <nav style="display: flex; justify-content: space-between; align-items: center;" class={classes!(classes.clone())}>
-            <div style="display: flex; align-items: center;" class={classes!(container_classes.clone())}>
+            <div class={classes!(container_classes.clone())}>
                 { left_nav_links.clone() }
             </div>
-            <div style="display: flex; align-items: center;" class={classes!(container_classes.clone())}>
+            <div class={classes!(container_classes.clone())}>
                 { center_nav_links.clone() }
             </div>
-            <div style="display: flex; align-items: center;" class={classes!(container_classes.clone())}>
+            <div class={classes!(container_classes.clone())}>
                 { right_nav_links.clone() }
             </div>
         </nav>
