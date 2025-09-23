@@ -54,6 +54,9 @@ pub struct NavBarProps {
     pub container_classes: Classes,
 
     #[prop_or_default]
+    pub main_nav_link: Html,
+
+    #[prop_or_default]
     pub left_nav_links: Html,
 
     #[prop_or_default]
@@ -82,13 +85,15 @@ pub fn NavBar(
     NavBarProps {
         classes,
         container_classes,
+        main_nav_link,
         left_nav_links,
         center_nav_links,
         right_nav_links,
     }: &NavBarProps,
 ) -> Html {
     html! {
-        <nav style="display: flex; justify-content: space-between; align-items: center;" class={classes!(classes.clone())}>
+        <nav class={classes!(classes.clone())}>
+            { main_nav_link.clone() }
             <div class={classes!(container_classes.clone())}>
                 { left_nav_links.clone() }
             </div>
@@ -98,49 +103,63 @@ pub fn NavBar(
             <div class={classes!(container_classes.clone())}>
                 { right_nav_links.clone() }
             </div>
+            <NavMenuButton />
         </nav>
     }
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct NavState {
+pub struct NavMenuState {
 	pub shown: bool
 }
 
-pub enum NavStateAction {
+pub enum NavMenuStateAction {
     Open,
     Close,
     Toggle,
 }
 
-impl Reducible for NavState {
-    type Action = NavStateAction;
+impl Reducible for NavMenuState {
+    type Action = NavMenuStateAction;
 
     fn reduce(self: std::rc::Rc<Self>, action: Self::Action) -> std::rc::Rc<Self> {
         match action {
-            NavStateAction::Open => NavState { shown: true },
-            NavStateAction::Close => NavState { shown: false },
-            NavStateAction::Toggle => NavState { shown: !self.shown },
+            NavMenuStateAction::Open => NavMenuState { shown: true },
+            NavMenuStateAction::Close => NavMenuState { shown: false },
+            NavMenuStateAction::Toggle => NavMenuState { shown: !self.shown },
         }
         .into()
     }
 }
 
-pub type NavStateContext = UseReducerHandle<NavState>;
+pub type NavMenuStateContext = UseReducerHandle<NavMenuState>;
 
 #[derive(Properties, Debug, PartialEq)]
-pub struct NavStateProviderProps {
+pub struct NavMenuStateProviderProps {
     #[prop_or_default]
     pub children: Html,
 }
 
 #[function_component]
-pub fn NavStateProvider(props: &NavStateProviderProps) -> Html {
-    let nav_state_reducer = use_reducer(|| NavState { shown: false });
+pub fn NavMenuStateProvider(props: &NavMenuStateProviderProps) -> Html {
+    let nav_state_reducer = use_reducer(|| NavMenuState { shown: false });
 
     html! {
-        <ContextProvider<NavStateContext> context={nav_state_reducer}>
+        <ContextProvider<NavMenuStateContext> context={nav_state_reducer}>
             {props.children.clone()}
-        </ContextProvider<NavStateContext>>
+        </ContextProvider<NavMenuStateContext>>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct NavMenuButtonProps {
+    #[prop_or_default]
+    pub classes: Classes,
+}
+
+#[function_component]
+pub fn NavMenuButton(NavMenuButtonProps { classes }: &NavMenuButtonProps) -> Html {
+    html! {
+        <button class={classes!(classes.clone())}>{ "TOGGLE" }</button>
     }
 }
