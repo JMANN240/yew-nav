@@ -45,72 +45,9 @@ pub fn NavLink<R: Routable + 'static>(
     }
 }
 
-#[derive(Properties, PartialEq)]
-pub struct NavBarProps {
-    #[prop_or_default]
-    pub classes: Classes,
-
-    #[prop_or_default]
-    pub container_classes: Classes,
-
-    #[prop_or_default]
-    pub main_nav_link: Html,
-
-    #[prop_or_default]
-    pub left_nav_links: Html,
-
-    #[prop_or_default]
-    pub center_nav_links: Html,
-
-    #[prop_or_default]
-    pub right_nav_links: Html,
-}
-
-#[macro_export]
-macro_rules! navbar_classes {
-    () => {
-        ::yew::classes!("flex", "justify-between", "items-center")
-    };
-}
-
-#[macro_export]
-macro_rules! navcontainer_classes {
-    () => {
-        ::yew::classes!("flex", "items-center", "gap-4")
-    };
-}
-
-#[function_component]
-pub fn NavBar(
-    NavBarProps {
-        classes,
-        container_classes,
-        main_nav_link,
-        left_nav_links,
-        center_nav_links,
-        right_nav_links,
-    }: &NavBarProps,
-) -> Html {
-    html! {
-        <nav class={classes!(classes.clone())}>
-            { main_nav_link.clone() }
-            <div class={classes!(container_classes.clone())}>
-                { left_nav_links.clone() }
-            </div>
-            <div class={classes!(container_classes.clone())}>
-                { center_nav_links.clone() }
-            </div>
-            <div class={classes!(container_classes.clone())}>
-                { right_nav_links.clone() }
-            </div>
-            <NavMenuButton />
-        </nav>
-    }
-}
-
 #[derive(Clone, Debug, PartialEq)]
 pub struct NavMenuState {
-	pub shown: bool
+    pub shown: bool,
 }
 
 pub enum NavMenuStateAction {
@@ -155,11 +92,42 @@ pub fn NavMenuStateProvider(props: &NavMenuStateProviderProps) -> Html {
 pub struct NavMenuButtonProps {
     #[prop_or_default]
     pub classes: Classes,
+
+    #[prop_or_default]
+    pub children: Html,
 }
 
 #[function_component]
-pub fn NavMenuButton(NavMenuButtonProps { classes }: &NavMenuButtonProps) -> Html {
+pub fn NavMenuButton(NavMenuButtonProps { classes, children }: &NavMenuButtonProps) -> Html {
+    let nav_menu_state_context =
+        use_context::<NavMenuStateContext>().expect("no nav menu state context found");
+
+    let on_click = {
+        let nav_menu_state_context = nav_menu_state_context.clone();
+
+        Callback::from(move |_| {
+            nav_menu_state_context.dispatch(NavMenuStateAction::Toggle);
+        })
+    };
+
     html! {
-        <button class={classes!(classes.clone())}>{ "TOGGLE" }</button>
+        <button
+            onclick={on_click}
+            class={classes!(classes.clone())}
+        >
+            { children.clone() }
+        </button>
     }
+}
+
+#[hook]
+pub fn use_hide_nav_menu<T>(deps: T)
+where
+	T: PartialEq + 'static
+{
+	let nav_menu_state_context = use_context::<NavMenuStateContext>().expect("no nav menu state found");
+
+	use_effect_with(deps, move |_| {
+		nav_menu_state_context.dispatch(NavMenuStateAction::Close);
+	});
 }
