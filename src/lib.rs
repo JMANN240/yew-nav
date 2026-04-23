@@ -23,7 +23,7 @@ pub struct NavLinkProps<R: PartialEq> {
     pub children: Html,
 }
 
-#[function_component]
+#[component]
 pub fn NavLink<R: Routable + 'static>(
     NavLinkProps {
         to,
@@ -77,7 +77,7 @@ pub struct NavMenuStateProviderProps {
     pub children: Html,
 }
 
-#[function_component]
+#[component]
 pub fn NavMenuStateProvider(props: &NavMenuStateProviderProps) -> Html {
     let nav_state_reducer = use_reducer(|| NavMenuState { shown: false });
 
@@ -97,7 +97,7 @@ pub struct NavMenuButtonProps {
     pub children: Html,
 }
 
-#[function_component]
+#[component]
 pub fn NavMenuButton(NavMenuButtonProps { classes, children }: &NavMenuButtonProps) -> Html {
     let nav_menu_state_context =
         use_context::<NavMenuStateContext>().expect("no nav menu state context found");

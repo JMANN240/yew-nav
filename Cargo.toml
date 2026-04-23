@@ -2,10 +2,10 @@
 name = "yew-nav"
 description = "A nav library for Yew"
 license = "MIT OR Apache-2.0"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 repository = "https://github.com/JMANN240/yew-nav"
 
 [dependencies]
-yew = "0.21.0"
-yew-router = "0.18.0"
+yew = "0.23.0"
+yew-router = "0.20.0"
